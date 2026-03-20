@@ -286,22 +286,21 @@ body.night .pslot:hover{filter:drop-shadow(0 8px 16px rgba(232,228,219,.07));}
    ONBOARDING / LANDING
 ══════════════════════════════ */
 #landing{
-  position:absolute;inset:0;top:44px;z-index:150;
+  position:fixed;left:0;right:0;top:44px;bottom:0;z-index:150;
   background:var(--bg);display:flex;
   flex-direction:column;
   transition:background .6s;
   overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
 }
 #landing.off{display:none;}
 
 .ob-wrap{
   width:440px;max-width:90vw;
   margin:0 auto;
-  padding:60px 0 80px;
+  padding:48px 0 120px;
   display:flex;flex-direction:column;
   gap:0;
-  min-height:100%;
-  justify-content:center;
 }
 
 /* step — each section of the onboarding */
@@ -584,7 +583,7 @@ body.night .pslot:hover{filter:drop-shadow(0 8px 16px rgba(232,228,219,.07));}
   .goal-btn{font-size:9px;padding:3px 8px;}
 
   /* landing — clear bottom nav */
-  .ob-wrap{padding:32px 0 calc(80px + env(safe-area-inset-bottom,0));justify-content:flex-start;}
+  .ob-wrap{padding:24px 0 calc(100px + env(safe-area-inset-bottom,0));}
 }
 </style>
 </head>
@@ -1750,7 +1749,7 @@ window.addEventListener('appinstalled',()=>{
 ══════════════════════════════ */
 if('serviceWorker' in navigator){
   const swCode=`
-const CACHE='tend-v1';
+const CACHE='tend-v3';
 const ASSETS=[self.location.href];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));
