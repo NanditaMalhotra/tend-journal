@@ -174,15 +174,7 @@ body:not(.night) #entries-view{background:var(--bg);}
 .wc-track{flex:1;height:1px;background:var(--b2);position:relative;transition:background .4s;}
 .wc-fill{position:absolute;left:0;top:0;height:100%;background:var(--ink);transition:width .6s cubic-bezier(.4,0,.2,1);}
 .wc-num{font-size:10px;letter-spacing:.06em;color:var(--ink3);white-space:nowrap;flex-shrink:0;transition:color .4s;}
-.goal-btn{
-  font-family:var(--mono);font-size:10px;letter-spacing:.1em;
-  color:var(--ink2);background:none;
-  border:1px solid var(--b);
-  padding:4px 10px;cursor:pointer;flex-shrink:0;
-  transition:background .16s,color .16s,border-color .4s;
-  white-space:nowrap;
-}
-.goal-btn:hover{background:var(--ink);color:var(--bg);border-color:var(--ink);}
+
 
 /* ruled writing area */
 .ruled-wrap{flex:1;overflow-y:auto;scrollbar-width:none;position:relative;margin-bottom:8px;}
@@ -252,23 +244,6 @@ body:not(.night) #entries-view{background:var(--bg);}
 }
 .modal-mode-btn.on{background:var(--ink);color:var(--bg);}
 .modal-mode-btn:not(.on):hover{color:var(--ink);}
-.nmodal-goal-wrap{
-  max-height:0;overflow:hidden;opacity:0;
-  transition:max-height .3s ease,opacity .3s ease;
-  margin-bottom:0;
-}
-.nmodal-goal-wrap.show{max-height:60px;opacity:1;margin-bottom:16px;}
-.nmodal-goal-inner{display:flex;align-items:center;gap:10px;padding:12px 0 0;}
-.nmodal-goal-lbl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);flex-shrink:0;transition:color .4s;}
-.nmodal-goal-in{
-  font-family:var(--mono);font-size:16px;color:var(--ink);
-  background:none;border:none;border-bottom:1px solid var(--b);
-  outline:none;padding:3px 0;width:70px;
-  transition:border-color .16s,color .4s;letter-spacing:.02em;
-}
-.nmodal-goal-in:focus{border-color:var(--ink);}
-.nmodal-goal-in::-webkit-inner-spin-button,.nmodal-goal-in::-webkit-outer-spin-button{opacity:1;cursor:pointer;}
-.nmodal-goal-unit{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);transition:color .4s;}
 .ruled-lines{position:absolute;inset:0;z-index:1;pointer-events:none;}
 
 /* right panel */
@@ -603,7 +578,6 @@ body.night .pslot:hover{filter:drop-shadow(0 8px 16px rgba(232,228,219,.07));}
   .modal{padding:28px 22px;width:94vw;}
 
   /* goal button wraps nicely */
-  .goal-btn{font-size:9px;padding:3px 8px;}
 
   /* landing — clear bottom nav */
   .ob-wrap{padding:24px 0 calc(100px + env(safe-area-inset-bottom,0));}
@@ -634,8 +608,7 @@ body.night .pslot:hover{filter:drop-shadow(0 8px 16px rgba(232,228,219,.07));}
   <div class="ev-header">
     <span class="ev-title">Entries</span>
     <div class="ev-right">
-      <button class="goal-btn" id="ev-goal-btn">Goal: 500 words</button>
-      <span class="ev-count" id="ev-count"></span>
+<span class="ev-count" id="ev-count"></span>
       <button class="ev-select-btn" id="ev-select-btn">Select</button>
     </div>
   </div>
@@ -690,7 +663,7 @@ body.night .pslot:hover{filter:drop-shadow(0 8px 16px rgba(232,228,219,.07));}
     <div class="wc-row" id="wc-row">
       <span class="wc-lbl" id="wc-lbl">0 words</span>
       <div class="wc-track"><div class="wc-fill" id="wc-fill"></div></div>
-      <button class="goal-btn" id="wc-num" title="Change goal">/ 500</button>
+      <span class="wc-num" id="wc-num">/ 500</span>
     </div>
 
     <div class="ruled-wrap" id="ruled-wrap">
@@ -745,7 +718,7 @@ body.night .pslot:hover{filter:drop-shadow(0 8px 16px rgba(232,228,219,.07));}
     <!-- Step 2: Mode selection -->
     <div class="ob-step" id="ob-modes-step">
       <span class="ob-section-lbl">How do you want to write?</span>
-      <p style="font-size:10px;letter-spacing:.04em;color:var(--ink3);margin-bottom:14px;margin-top:-8px;line-height:1.7;transition:color .4s;">Pick a default. You can change it for each entry, even mid-entry.</p>
+      <p style="font-size:10px;letter-spacing:.04em;color:var(--ink3);margin-bottom:14px;margin-top:-8px;line-height:1.7;transition:color .4s;">Pick a default. You can change it per entry, even mid-entry. Come back here to change your word goal.</p>
       <div class="ob-modes">
         <div class="ob-mode selected" id="ob-mode-goal">
           <div class="ob-mode-name">
@@ -773,7 +746,7 @@ body.night .pslot:hover{filter:drop-shadow(0 8px 16px rgba(232,228,219,.07));}
 
     <!-- Step 3: Begin -->
     <div class="ob-step" id="ob-begin-step">
-      <button class="ob-begin" id="ob-begin" disabled>Begin writing</button>
+      <button class="ob-begin" id="ob-begin" disabled>Begin</button>
     </div>
 
   </div>
@@ -824,34 +797,11 @@ body.night .pslot:hover{filter:drop-shadow(0 8px 16px rgba(232,228,219,.07));}
       <button class="modal-mode-btn on" id="nmodal-mode-goal">Goal</button>
       <button class="modal-mode-btn" id="nmodal-mode-free">Free write</button>
     </div>
-    <div class="nmodal-goal-wrap" id="nmodal-goal-wrap">
-      <div class="nmodal-goal-inner">
-        <span class="nmodal-goal-lbl">Word goal</span>
-        <input type="number" class="nmodal-goal-in" id="nmodal-goal-in" min="50" max="10000" step="50">
-        <span class="nmodal-goal-unit">words</span>
-      </div>
-    </div>
     <input type="text" class="nmodal-in" id="nmodal-title" placeholder="Title…" maxlength="80">
     <input type="text" class="nmodal-date" id="nmodal-date" placeholder="Date — e.g. 14 Jan 2025">
     <div class="modal-acts">
       <button class="modal-ok" id="nmodal-ok">Begin</button>
       <button class="modal-cancel" id="nmodal-cancel">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- GOAL EDIT MODAL -->
-<div class="modal-bg" id="gmodal-bg">
-  <div class="modal">
-    <div class="modal-ttl">Word goal</div>
-    <div class="modal-sub">Your daily writing goal. Change it any time.</div>
-    <div class="modal-row">
-      <input type="number" class="modal-in" id="gmodal-in" min="50" max="10000" step="50">
-      <span class="modal-unit">words</span>
-    </div>
-    <div class="modal-acts">
-      <button class="modal-ok" id="gmodal-ok">Save</button>
-      <button class="modal-cancel" id="gmodal-cancel">Cancel</button>
     </div>
   </div>
 </div>
@@ -1217,7 +1167,7 @@ function progressLabel(entry){
     return `${wc} word${wc!==1?'s':''}`;
   }
   const goal=entry.goal||ST.goal;
-  if(wc===0) return 'Begin writing';
+  if(wc===0) return 'Begin';
   if(wc>=goal){
     const over=wc-goal;
     return over>0 ? `${wc} words · ${over} beyond goal` : `${wc} words · goal reached`;
@@ -1340,16 +1290,18 @@ function renderWrite(animated){
 
   const wc=wordCount(entry.text||'');
   const goal=entry.goal||ST.goal;
+  const wcNumEl=document.getElementById('wc-num');
 
   if(!isFree){
     const pct=Math.min(1,wc/goal);
     document.getElementById('wc-fill').style.width=`${pct*100}%`;
     document.getElementById('wc-lbl').textContent=`${wc} word${wc!==1?'s':''}`;
-    document.getElementById('wc-num').textContent=`/ ${goal}`;
     document.getElementById('pp-bar').style.width=`${pct*100}%`;
+    if(wcNumEl){wcNumEl.textContent=`/ ${goal}`;wcNumEl.style.display='';}
   } else {
     document.getElementById('wc-lbl').textContent=`${wc} word${wc!==1?'s':''}`;
     document.getElementById('pp-bar').style.width=`100%`;
+    if(wcNumEl) wcNumEl.style.display='none';
   }
 
   document.getElementById('pp-txt').textContent=progressLabel(entry);
@@ -1363,10 +1315,12 @@ function renderWrite(animated){
     entry.text=area.value;
     save();
     const wc2=wordCount(area.value);
-    const pct2=Math.min(1,wc2/goal);
+    const liveGoal=ST.goal;
+    const pct2=Math.min(1,wc2/liveGoal);
     if(!isFree){
       document.getElementById('wc-fill').style.width=`${pct2*100}%`;
-      document.getElementById('wc-num').textContent=`/ ${goal}`;
+      document.getElementById('pp-bar').style.width=`${pct2*100}%`;
+      const n=document.getElementById('wc-num');if(n) n.textContent=`/ ${liveGoal}`;
     } else {
       document.getElementById('pp-bar').style.width='100%';
     }
@@ -1434,17 +1388,20 @@ function renderGarden(){
   empty.style.display='none';
   const W=gv.clientWidth||window.innerWidth;
   const mob=window.innerWidth<=768;
-  const scale=mob?0.55:1;
+  const scale=mob?0.42:1;
   archived.forEach(entry=>{
     const x=stableX(entry,W);
     const type=entry.plantType%PLANTS.length;
-    const svgH=Math.round((PLANT_H[type]+34)*scale),svgW=Math.round(106*scale);
+    const fullH=PLANT_H[type]+34;
+    const fullW=106;
+    const dispW=Math.round(fullW*scale);
+    const dispH=Math.round(fullH*scale);
     const wc=wordCount(entry.text||'');
     const slot=document.createElement('div');
     slot.className='pslot';
-    slot.style.cssText=`left:${x-svgW/2}px;width:${svgW}px;height:${svgH}px;z-index:${Math.round(x/10)+3};`;
+    slot.style.cssText=`left:${x-dispW/2}px;width:${dispW}px;height:${dispH}px;z-index:${Math.round(x/10)+3};`;
     slot.innerHTML=`
-      <svg viewBox="${-svgW/2} ${-svgH} ${svgW} ${svgH}" xmlns="http://www.w3.org/2000/svg" width="${svgW}" height="${svgH}" style="overflow:visible;display:block;">
+      <svg viewBox="${-fullW/2} ${-fullH} ${fullW} ${fullH}" xmlns="http://www.w3.org/2000/svg" width="${dispW}" height="${dispH}" style="overflow:visible;display:block;">
         <g class="swayg">${buildSVG(entry,false)}</g>
       </svg>
       <div class="ptip">
@@ -1520,8 +1477,7 @@ function openEntry(id){
   setTimeout(()=>document.getElementById('ruled-area').focus(),80);
 }
 
-function createEntry(title,date,freeWrite,entryGoal){
-  if(entryGoal) arguments[0]; // capture
+function createEntry(title,date,freeWrite){
   ST.counter++;
   const entry={id:Date.now(),title:title||'Untitled entry',date:date||'',text:'',createdAt:Date.now(),plantType:ST.counter,archived:false,completedAt:null,freeWrite:!!freeWrite,goal:null};
   ST.entries.push(entry);ST.viewingId=entry.id;save();
@@ -1612,15 +1568,13 @@ function setNmodalMode(free){
   nmodalFreeWrite=free;
   document.getElementById('nmodal-mode-goal').classList.toggle('on',!free);
   document.getElementById('nmodal-mode-free').classList.toggle('on',free);
-  document.getElementById('nmodal-goal-wrap').classList.toggle('show',!free);
-}
+  }
 function openNewModal(){
   const t=document.getElementById('nmodal-title');
   const d=document.getElementById('nmodal-date');
   t.value='';
   d.value=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
-  document.getElementById('nmodal-goal-in').value=ST.goal;
-  setNmodalMode(ST.freeWrite);
+    setNmodalMode(ST.freeWrite);
   document.getElementById('nmodal-bg').classList.add('on');
   setTimeout(()=>t.focus(),70);
 }
@@ -1628,10 +1582,9 @@ function closeNewModal(){document.getElementById('nmodal-bg').classList.remove('
 function confirmNew(){
   const title=document.getElementById('nmodal-title').value.trim();
   const date=document.getElementById('nmodal-date').value.trim();
-  const entryGoal=nmodalFreeWrite?null:(parseInt(document.getElementById('nmodal-goal-in').value)||ST.goal);
   closeNewModal();
   hideLanding();
-  createEntry(title,date,nmodalFreeWrite,entryGoal);
+  createEntry(title,date,nmodalFreeWrite);
 }
 document.getElementById('nmodal-ok').addEventListener('click',confirmNew);
 document.getElementById('nmodal-cancel').addEventListener('click',closeNewModal);
@@ -1641,35 +1594,10 @@ document.getElementById('nmodal-bg').addEventListener('click',e=>{if(e.target===
 document.getElementById('nmodal-mode-goal').addEventListener('click',()=>setNmodalMode(false));
 document.getElementById('nmodal-mode-free').addEventListener('click',()=>setNmodalMode(true));
 document.getElementById('new-btn').addEventListener('click',openNewModal);
-
-/* ══════════════════════════════
-   GOAL MODAL
-══════════════════════════════ */
-function openGoalModal(){
-  document.getElementById('gmodal-in').value=ST.goal;
-  document.getElementById('gmodal-bg').classList.add('on');
-  setTimeout(()=>document.getElementById('gmodal-in').focus(),70);
-}
-function closeGoalModal(){document.getElementById('gmodal-bg').classList.remove('on');}
-function updateGoalBtn(){
-  const btn=document.getElementById('ev-goal-btn');
-  if(btn) btn.textContent=`Goal: ${ST.goal} words`;
-}
-function confirmGoal(){
-  const v=parseInt(document.getElementById('gmodal-in').value);
-  if(v&&v>=50){ST.goal=v;save();renderWrite(false);renderEntriesView();updateGoalBtn();}
-  closeGoalModal();
-}
-document.getElementById('gmodal-ok').addEventListener('click',confirmGoal);
-document.getElementById('gmodal-cancel').addEventListener('click',closeGoalModal);
-document.getElementById('gmodal-in').addEventListener('keydown',e=>{if(e.key==='Enter')confirmGoal();if(e.key==='Escape')closeGoalModal();});
-document.getElementById('gmodal-bg').addEventListener('click',e=>{if(e.target===document.getElementById('gmodal-bg'))closeGoalModal();});
 document.getElementById('wordmark').addEventListener('click',()=>{
   document.getElementById('landing').classList.remove('off');
   showOnboarding();
 });
-document.getElementById('wc-num').addEventListener('click',openGoalModal);
-document.getElementById('ev-goal-btn').addEventListener('click',openGoalModal);
 
 /* ══════════════════════════════
    SEARCH
@@ -1762,10 +1690,6 @@ setInterval(updateClock,30000);
 let rt;
 window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{renderGarden();drawStars();drawRuledLines();drawEntryStars();},120);});
 requestAnimationFrame(()=>{
-  updateGoalBtn();
-  // Hide goal button in free-write mode
-  const goalBtn=document.getElementById('ev-goal-btn');
-  if(goalBtn) goalBtn.style.display=ST.freeWrite?'none':'';
   renderEntriesView();renderGarden();
   showOnboarding();
 });
