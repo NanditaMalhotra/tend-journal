@@ -1454,7 +1454,8 @@ function closeSheet(){
 
 document.getElementById('sheet-cancel').addEventListener('click', closeSheet);
 document.getElementById('sheet-open').addEventListener('click', ()=>{
-  if(sheetEntryId){ closeSheet(); openEntry(sheetEntryId); }
+  const id=sheetEntryId;
+  if(id){ closeSheet(); openEntry(id); }
 });
 document.getElementById('sheet-bg').addEventListener('click', e=>{
   if(e.target === document.getElementById('sheet-bg')) closeSheet();
