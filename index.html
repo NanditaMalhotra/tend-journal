@@ -200,12 +200,13 @@ body:not(.night) #entries-view{background:var(--bg);}
 .ruled-area::placeholder{color:var(--ink3);}
 .mobile-plant{
   display:none;
-  position:absolute;bottom:0;right:16px;
-  width:70px;height:100px;
-  pointer-events:none;z-index:3;
-  opacity:1;
+  width:60px;height:80px;
+  flex-shrink:0;
+  pointer-events:none;
+  align-self:flex-end;
   transition:opacity .6s;
 }
+.entry-hdr-inner{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
 .free-plant-btn{  font-family:var(--mono);font-size:10px;font-weight:700;
   letter-spacing:.13em;text-transform:uppercase;
   color:var(--ink);background:none;
@@ -588,7 +589,7 @@ body.night .pslot:hover{filter:drop-shadow(0 8px 16px rgba(232,228,219,.07));}
   .plant-side{display:none;}
   .mobile-plant{display:block !important;}
   .wc-row{gap:8px;}
-  .ruled-area{padding-right:0;padding-bottom:120px;}
+
 
   /* garden */
   .pslot:hover{transform:none;filter:none;}
@@ -669,11 +670,16 @@ body.night .pslot:hover{filter:drop-shadow(0 8px 16px rgba(232,228,219,.07));}
     <div class="archived-badge" id="archived-badge">Planted · still editable</div>
 
     <div class="entry-hdr">
-      <div class="entry-title-wrap">
-        <div class="entry-title" id="entry-title"></div>
-        <input type="text" class="entry-title-in" id="entry-title-in" maxlength="80">
+      <div class="entry-hdr-inner">
+        <div>
+          <div class="entry-title-wrap">
+            <div class="entry-title" id="entry-title"></div>
+            <input type="text" class="entry-title-in" id="entry-title-in" maxlength="80">
+          </div>
+          <div class="entry-date" id="entry-date"></div>
+        </div>
+        <div class="mobile-plant" id="mobile-plant"></div>
       </div>
-      <div class="entry-date" id="entry-date"></div>
     </div>
 
     <div class="mode-toggle" id="write-mode-toggle">
@@ -690,7 +696,6 @@ body.night .pslot:hover{filter:drop-shadow(0 8px 16px rgba(232,228,219,.07));}
     <div class="ruled-wrap" id="ruled-wrap">
       <canvas class="ruled-lines" id="ruled-canvas"></canvas>
       <textarea class="ruled-area" id="ruled-area" placeholder="Start writing…" spellcheck="true"></textarea>
-      <div class="mobile-plant" id="mobile-plant"></div>
     </div>
     <button class="free-plant-btn" id="free-plant-btn" style="display:none;">Plant it →</button>
   </div>
@@ -1312,9 +1317,9 @@ function renderMobilePlant(entry){
   const n = stepsForEntry(entry);
   const type = entry.plantType % PLANTS.length;
   const h = PLANT_H[type];
-  const w = 44;
+  const w = 52;
   const svg = PLANTS[type](n, false) + extraGrowthSVG(entry, false);
-  el.innerHTML = `<svg viewBox="${-w/2} ${-h} ${w} ${h+4}" xmlns="http://www.w3.org/2000/svg" width="${w}" height="100" preserveAspectRatio="xMidYMax meet" style="overflow:visible;display:block;"><g>${svg}</g></svg>`;
+  el.innerHTML = `<svg viewBox="${-w/2} ${-h} ${w} ${h+4}" xmlns="http://www.w3.org/2000/svg" width="${w}" height="80" preserveAspectRatio="xMidYMax meet" style="overflow:visible;display:block;"><g>${svg}</g></svg>`;
 }
 function renderWrite(animated){
   const entry=viewingEntry();
