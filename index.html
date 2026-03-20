@@ -16,7 +16,7 @@
 <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Tend%22%2C%22short_name%22%3A%22Tend%22%2C%22description%22%3A%22A%20journal%20that%20grows%20with%20you.%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23faf8f5%22%2C%22theme_color%22%3A%22%23faf8f5%22%2C%22orientation%22%3A%22portrait%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D%2527http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%2527%2520viewBox%3D%270%25200%2520512%2520512%2527%253E%253Crect%2520width%3D%2527512%2527%2520height%3D%2527512%2527%2520rx%3D%252780%2527%2520fill%3D%2527%2523fff%2527%2F%253E%253Cpath%2520d%3D%2527M256%2C480%2520C256%2C480%2520180%2C400%2520180%2C300%2520C180%2C200%2520210%2C140%2520256%2C100%2520C302%2C140%2520332%2C200%2520332%2C300%2520C332%2C400%2520256%2C480%2520256%2C480Z%2527%2520fill%3D%2527none%2527%2520stroke%3D%2527%2523111%2527%2520stroke-width%3D%252722%2527%2520stroke-linecap%3D%2527round%2527%2F%253E%253Cpath%2520d%3D%2527M256%2C200%2520C256%2C200%2520200%2C160%2520180%2C100%2527%2520fill%3D%2527none%2527%2520stroke%3D%2527%2523111%2527%2520stroke-width%3D%252718%2527%2520stroke-linecap%3D%2527round%2527%2F%253E%253Cpath%2520d%3D%2527M256%2C280%2520C256%2C280%2520320%2C240%2520340%2C180%2527%2520fill%3D%2527none%2527%2520stroke%3D%2527%2523111%2527%2520stroke-width%3D%252718%2527%2520stroke-linecap%3D%2527round%2527%2F%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
 
 <!-- Apple touch icon (inline SVG as data URI) -->
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%23fff'/><path d='M256,480 C256,480 180,400 180,300 C180,200 210,140 256,100 C302,140 332,200 332,300 C332,400 256,480 256,480Z' fill='none' stroke='%23111' stroke-width='22' stroke-linecap='round'/><path d='M256,200 C256,200 200,160 180,100' fill='none' stroke='%23111' stroke-width='18' stroke-linecap='round'/><path d='M256,280 C256,280 320,240 340,180' fill='none' stroke='%23111' stroke-width='18' stroke-linecap='round'/></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20512%20512%27%3E%3Crect%20width%3D%27512%27%20height%3D%27512%27%20rx%3D%2780%27%20fill%3D%27%23faf8f5%27%2F%3E%3Ctext%20x%3D%27256%27%20y%3D%27290%27%20font-family%3D%27monospace%27%20font-size%3D%2796%27%20font-weight%3D%27700%27%20fill%3D%27%23111010%27%20text-anchor%3D%27middle%27%20letter-spacing%3D%2712%27%3ETEND%3C%2Ftext%3E%3C%2Fsvg%3E">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -567,6 +567,8 @@ body.night .pslot:hover{filter:drop-shadow(0 8px 16px rgba(232,228,219,.07));}
 
 
   /* garden */
+  #garden-view{height:calc(100vh - 44px - 49px - env(safe-area-inset-bottom,0));}
+  .g-ground{bottom:0;}
   .pslot:hover{transform:none;filter:none;}
   .ptip{display:none;}
 
@@ -1759,6 +1761,39 @@ function updateThemeColorMeta(){
   const meta=document.getElementById('theme-color-meta');
   if(meta) meta.content=darkMode?'#0f0e0d':'#faf8f5';
 }
+
+// Generate app icon using actual loaded Space Mono font
+function generateIcon(){
+  try{
+    const size=512;
+    const cv=document.createElement('canvas');
+    cv.width=cv.height=size;
+    const ctx=cv.getContext('2d');
+    // Background
+    const r=80;
+    ctx.beginPath();
+    ctx.moveTo(r,0);ctx.lineTo(size-r,0);ctx.quadraticCurveTo(size,0,size,r);
+    ctx.lineTo(size,size-r);ctx.quadraticCurveTo(size,size,size-r,size);
+    ctx.lineTo(r,size);ctx.quadraticCurveTo(0,size,0,size-r);
+    ctx.lineTo(0,r);ctx.quadraticCurveTo(0,0,r,0);
+    ctx.closePath();
+    ctx.fillStyle='#faf8f5';ctx.fill();
+    // Text
+    ctx.fillStyle='#111010';
+    ctx.font='700 88px "Space Mono", monospace';
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.letterSpacing='8px';
+    ctx.fillText('TEND',size/2,size/2);
+    const url=cv.toDataURL('image/png');
+    // Update apple-touch-icon
+    let link=document.querySelector('link[rel="apple-touch-icon"]');
+    if(!link){link=document.createElement('link');link.rel='apple-touch-icon';document.head.appendChild(link);}
+    link.href=url;
+  }catch(e){}
+}
+// Wait for font to load then generate
+document.fonts.ready.then(generateIcon);
 // Patch applyTheme to also update meta
 const _applyTheme=applyTheme;
 // Called after applyTheme is defined — just add to it
