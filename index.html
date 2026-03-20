@@ -139,13 +139,13 @@ body:not(.night) #entries-view{background:var(--bg);}
    WRITE VIEW
 ══════════════════════════════ */
 #write-view{
-  display:grid;grid-template-columns:580px 1fr;
+  display:grid;grid-template-columns:65% 1fr;
   height:calc(100vh - 44px);overflow:hidden;
   background:var(--bg);transition:background .6s;
 }
 
 /* left panel */
-.write-side{display:flex;flex-direction:column;padding:28px 40px 20px;border-right:1px solid var(--b);overflow:hidden;transition:border-color .4s;}
+.write-side{display:flex;flex-direction:column;padding:28px 40px 20px;border-right:1px solid var(--b);overflow:hidden;background:var(--bg);transition:border-color .4s,background .6s;}
 
 .back-btn{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);background:none;border:none;cursor:pointer;padding:0;margin-bottom:20px;flex-shrink:0;transition:color .16s;}
 .back-btn:hover{color:var(--ink);}
@@ -198,6 +198,14 @@ body:not(.night) #entries-view{background:var(--bg);}
 }
 .ruled-area::-webkit-scrollbar{display:none;}
 .ruled-area::placeholder{color:var(--ink3);}
+.mobile-plant{
+  display:none;
+  position:absolute;bottom:0;right:16px;
+  width:70px;height:100px;
+  pointer-events:none;z-index:3;
+  opacity:1;
+  transition:opacity .6s;
+}
 .free-plant-btn{  font-family:var(--mono);font-size:10px;font-weight:700;
   letter-spacing:.13em;text-transform:uppercase;
   color:var(--ink);background:none;
@@ -243,6 +251,23 @@ body:not(.night) #entries-view{background:var(--bg);}
 }
 .modal-mode-btn.on{background:var(--ink);color:var(--bg);}
 .modal-mode-btn:not(.on):hover{color:var(--ink);}
+.nmodal-goal-wrap{
+  max-height:0;overflow:hidden;opacity:0;
+  transition:max-height .3s ease,opacity .3s ease;
+  margin-bottom:0;
+}
+.nmodal-goal-wrap.show{max-height:60px;opacity:1;margin-bottom:16px;}
+.nmodal-goal-inner{display:flex;align-items:center;gap:10px;padding:12px 0 0;}
+.nmodal-goal-lbl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);flex-shrink:0;transition:color .4s;}
+.nmodal-goal-in{
+  font-family:var(--mono);font-size:16px;color:var(--ink);
+  background:none;border:none;border-bottom:1px solid var(--b);
+  outline:none;padding:3px 0;width:70px;
+  transition:border-color .16s,color .4s;letter-spacing:.02em;
+}
+.nmodal-goal-in:focus{border-color:var(--ink);}
+.nmodal-goal-in::-webkit-inner-spin-button,.nmodal-goal-in::-webkit-outer-spin-button{opacity:1;cursor:pointer;}
+.nmodal-goal-unit{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);transition:color .4s;}
 .ruled-lines{position:absolute;inset:0;z-index:1;pointer-events:none;}
 
 /* right panel */
@@ -432,7 +457,7 @@ body.night .pslot:hover{filter:drop-shadow(0 8px 16px rgba(232,228,219,.07));}
 .modal-ttl{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin-bottom:3px;}
 .modal-sub{font-size:11px;color:var(--ink2);margin-bottom:22px;letter-spacing:.04em;line-height:1.7;transition:color .4s;}
 .modal-row{display:flex;align-items:center;gap:10px;margin-bottom:22px;}
-.modal-in{font-family:var(--mono);font-size:20px;color:var(--ink);background:none;border:none;border-bottom:1px solid var(--b);outline:none;padding:4px 0;transition:border-color .16s,color .4s;width:110px;}
+.modal-in{font-family:var(--mono);font-size:20px;color:var(--ink);background:none;border:none;border-bottom:1px solid var(--b);outline:none;padding:4px 0;transition:border-color .16s,color .4s;width:110px;}.modal-in::-webkit-inner-spin-button,.modal-in::-webkit-outer-spin-button{opacity:1;cursor:pointer;}
 .modal-in:focus{border-color:var(--ink);}
 .modal-unit{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);transition:color .4s;}
 
@@ -547,26 +572,23 @@ body.night .pslot:hover{filter:drop-shadow(0 8px 16px rgba(232,228,219,.07));}
   .ev-search{padding:10px 18px;}
   .ev-delete-bar{padding:10px 18px;}
 
-  /* write view — plant top, writing below */
+  /* write view — full width, plant as corner doodle */
   #write-view{
     grid-template-columns:1fr;
-    grid-template-rows:36vh 1fr;
+    grid-template-rows:1fr;
     overflow:hidden;
   }
   .write-side{
-    padding:14px 18px 12px;
+    padding:14px 18px calc(80px + env(safe-area-inset-bottom,0));
     overflow-y:auto;
-    order:2;
+    -webkit-overflow-scrolling:touch;
+    order:1;
     background:var(--bg);
   }
-  .plant-side{
-    order:1;
-    border-right:none;
-    border-bottom:1px solid var(--b);
-    padding:10px 18px 0;
-  }
-  .pp-area{padding:8px 18px 10px;}
+  .plant-side{display:none;}
+  .mobile-plant{display:block !important;}
   .wc-row{gap:8px;}
+  .ruled-area{padding-right:0;padding-bottom:120px;}
 
   /* garden */
   .pslot:hover{transform:none;filter:none;}
@@ -668,6 +690,7 @@ body.night .pslot:hover{filter:drop-shadow(0 8px 16px rgba(232,228,219,.07));}
     <div class="ruled-wrap" id="ruled-wrap">
       <canvas class="ruled-lines" id="ruled-canvas"></canvas>
       <textarea class="ruled-area" id="ruled-area" placeholder="Start writing…" spellcheck="true"></textarea>
+      <div class="mobile-plant" id="mobile-plant"></div>
     </div>
     <button class="free-plant-btn" id="free-plant-btn" style="display:none;">Plant it →</button>
   </div>
@@ -795,6 +818,13 @@ body.night .pslot:hover{filter:drop-shadow(0 8px 16px rgba(232,228,219,.07));}
     <div class="modal-mode-toggle" id="nmodal-mode-toggle">
       <button class="modal-mode-btn on" id="nmodal-mode-goal">Goal</button>
       <button class="modal-mode-btn" id="nmodal-mode-free">Free write</button>
+    </div>
+    <div class="nmodal-goal-wrap" id="nmodal-goal-wrap">
+      <div class="nmodal-goal-inner">
+        <span class="nmodal-goal-lbl">Word goal</span>
+        <input type="number" class="nmodal-goal-in" id="nmodal-goal-in" min="50" max="10000" step="50">
+        <span class="nmodal-goal-unit">words</span>
+      </div>
     </div>
     <input type="text" class="nmodal-in" id="nmodal-title" placeholder="Title…" maxlength="80">
     <input type="text" class="nmodal-date" id="nmodal-date" placeholder="Date — e.g. 14 Jan 2025">
@@ -957,7 +987,7 @@ function stepsForEntry(entry){
     return Math.min(9, Math.floor(wc/50)+1);
   }
   const wc=wordCount(entry.text||'');
-  const goal=ST.goal;
+  const goal=entry.goal||ST.goal;
   if(wc<=0) return 0;
   return Math.min(10, Math.ceil((Math.min(wc,goal)/goal)*10));
 }
@@ -965,7 +995,7 @@ function stepsForEntry(entry){
 function extraWords(entry){
   if(entry.freeWrite) return 0;
   const wc=wordCount(entry.text||'');
-  return Math.max(0, wc-ST.goal);
+  return Math.max(0, wc-(entry.goal||ST.goal));
 }
 
 function extraGrowthSVG(entry,an){
@@ -1181,7 +1211,7 @@ function progressLabel(entry){
     if(entry._freeComplete) return `${wc} words · planted`;
     return `${wc} word${wc!==1?'s':''}`;
   }
-  const goal=ST.goal;
+  const goal=entry.goal||ST.goal;
   if(wc===0) return 'Begin writing';
   if(wc>=goal){
     const over=wc-goal;
@@ -1275,6 +1305,17 @@ function renderEntriesView(){
 /* ══════════════════════════════
    RENDER — WRITE PANEL
 ══════════════════════════════ */
+
+function renderMobilePlant(entry){
+  const el = document.getElementById('mobile-plant');
+  if(!el) return;
+  const n = stepsForEntry(entry);
+  const type = entry.plantType % PLANTS.length;
+  const h = PLANT_H[type];
+  const w = 44;
+  const svg = PLANTS[type](n, false) + extraGrowthSVG(entry, false);
+  el.innerHTML = `<svg viewBox="${-w/2} ${-h} ${w} ${h+4}" xmlns="http://www.w3.org/2000/svg" width="${w}" height="100" preserveAspectRatio="xMidYMax meet" style="overflow:visible;display:block;"><g>${svg}</g></svg>`;
+}
 function renderWrite(animated){
   const entry=viewingEntry();
   if(!entry){switchView('entries');return;}
@@ -1293,7 +1334,7 @@ function renderWrite(animated){
   freePlantBtn.style.display=(!isArchived&&isFree)?'block':'none';
 
   const wc=wordCount(entry.text||'');
-  const goal=ST.goal;
+  const goal=entry.goal||ST.goal;
 
   if(!isFree){
     const pct=Math.min(1,wc/goal);
@@ -1328,6 +1369,7 @@ function renderWrite(animated){
     document.getElementById('pp-txt').textContent=progressLabel(entry);
     document.getElementById('ps-stage').textContent=stageLabel(entry);
     document.getElementById('write-plant-g').innerHTML=buildSVG(entry,false);
+    renderMobilePlant(entry);
     if(!isFree) checkGoal(entry);
     renderEntriesView();
     setTimeout(drawRuledLines,50);
@@ -1337,6 +1379,7 @@ function renderWrite(animated){
   if(!isFree) checkGoal(entry);
   else document.getElementById('done-banner').classList.remove('on');
   document.getElementById('write-plant-g').innerHTML=buildSVG(entry,animated);
+  renderMobilePlant(entry);
   setTimeout(()=>{drawRuledLines();},60);
 }
 
@@ -1369,7 +1412,7 @@ function checkGoal(entry){
   const b=document.getElementById('done-banner');
   if(!entry){b.classList.remove('on');return;}
   const wc=wordCount(entry.text||'');
-  b.classList.toggle('on', wc>=ST.goal && !entry.archived);
+  b.classList.toggle('on', wc>=(entry.goal||ST.goal) && !entry.archived);
 }
 
 /* ══════════════════════════════
@@ -1385,10 +1428,12 @@ function renderGarden(){
   if(archived.length===0){empty.style.display='flex';return;}
   empty.style.display='none';
   const W=gv.clientWidth||window.innerWidth;
+  const mob=window.innerWidth<=768;
+  const scale=mob?0.55:1;
   archived.forEach(entry=>{
     const x=stableX(entry,W);
     const type=entry.plantType%PLANTS.length;
-    const svgH=PLANT_H[type]+34,svgW=106;
+    const svgH=Math.round((PLANT_H[type]+34)*scale),svgW=Math.round(106*scale);
     const wc=wordCount(entry.text||'');
     const slot=document.createElement('div');
     slot.className='pslot';
@@ -1470,9 +1515,10 @@ function openEntry(id){
   setTimeout(()=>document.getElementById('ruled-area').focus(),80);
 }
 
-function createEntry(title,date,freeWrite){
+function createEntry(title,date,freeWrite,entryGoal){
+  if(entryGoal) arguments[0]; // capture
   ST.counter++;
-  const entry={id:Date.now(),title:title||'Untitled entry',date:date||'',text:'',createdAt:Date.now(),plantType:ST.counter,archived:false,completedAt:null,freeWrite:!!freeWrite};
+  const entry={id:Date.now(),title:title||'Untitled entry',date:date||'',text:'',createdAt:Date.now(),plantType:ST.counter,archived:false,completedAt:null,freeWrite:!!freeWrite,goal:null};
   ST.entries.push(entry);ST.viewingId=entry.id;save();
   switchView('write');renderWrite(false);
   setTimeout(()=>document.getElementById('ruled-area').focus(),80);
@@ -1561,12 +1607,14 @@ function setNmodalMode(free){
   nmodalFreeWrite=free;
   document.getElementById('nmodal-mode-goal').classList.toggle('on',!free);
   document.getElementById('nmodal-mode-free').classList.toggle('on',free);
+  document.getElementById('nmodal-goal-wrap').classList.toggle('show',!free);
 }
 function openNewModal(){
   const t=document.getElementById('nmodal-title');
   const d=document.getElementById('nmodal-date');
   t.value='';
   d.value=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  document.getElementById('nmodal-goal-in').value=ST.goal;
   setNmodalMode(ST.freeWrite);
   document.getElementById('nmodal-bg').classList.add('on');
   setTimeout(()=>t.focus(),70);
@@ -1575,8 +1623,10 @@ function closeNewModal(){document.getElementById('nmodal-bg').classList.remove('
 function confirmNew(){
   const title=document.getElementById('nmodal-title').value.trim();
   const date=document.getElementById('nmodal-date').value.trim();
+  const entryGoal=nmodalFreeWrite?null:(parseInt(document.getElementById('nmodal-goal-in').value)||ST.goal);
   closeNewModal();
-  createEntry(title,date,nmodalFreeWrite);
+  hideLanding();
+  createEntry(title,date,nmodalFreeWrite,entryGoal);
 }
 document.getElementById('nmodal-ok').addEventListener('click',confirmNew);
 document.getElementById('nmodal-cancel').addEventListener('click',closeNewModal);
@@ -1678,10 +1728,10 @@ function switchView(name){
   document.getElementById('nav-entries').classList.toggle('on',name==='entries');
   document.getElementById('nav-garden').classList.toggle('on',name==='garden');
   const isWriting=name==='write';
-  // sync bottom nav — only on mobile
+  // always show bottom nav on mobile
   const isMob=window.innerWidth<=768;
-  document.getElementById('bottom-nav').style.display=(!isMob||isWriting)?'none':(isMob?'block':'none');
-  document.getElementById('bn-entries').classList.toggle('on',name==='entries');
+  document.getElementById('bottom-nav').style.display=isMob?'block':'none';
+  document.getElementById('bn-entries').classList.toggle('on', name==='entries'||name==='write');
   document.getElementById('bn-garden').classList.toggle('on',name==='garden');
   if(name==='garden'){renderGarden();drawStars();}
   if(name==='entries'){renderEntriesView();drawEntryStars();setTimeout(()=>{const el=document.getElementById('ev-search');if(el)el.focus();},60);}
